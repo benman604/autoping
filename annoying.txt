@@ -1,0 +1,12 @@
+[c]+o[o]+[k]+[e]+[d]+
+g[a]+p[p]+[e]+[d]+
+m[o]+g[g]+[e]+[d]+
+i fell off
+my falloff
+lock in
+(no|not|can't|cant|need).*locked in
+locked out
+(its|it's|it is) s[o]+.*over
+(its|it's|it is)*.over for
+^s[o]+\b(?:\s+\w+){1,2}\s+over\b(?:\s+\w+){0,2}$
+joever

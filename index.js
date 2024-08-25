@@ -2,9 +2,18 @@ const { Client } = require('discord.js');
 const { token, me, sid, justin, nomic, testsite } = require('./config.json');
 const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"] });
 const fs = require('fs');
-const annoying = require('./annoying.js');
+// const annoying = require('./annoying.js');
 const showCounterProbability = 0.2;
 var rep;
+
+let annoying = []
+fs.readFile('annoying.txt', 'utf8', (err, data) => {
+	if (err) {
+		console.error(err)
+		return
+	}
+	annoying = data.split('\n').map(exp => new RegExp(exp, 'i')) // case insensitive
+})
 
 client.once('ready', () => {
 	console.log('Ready!');
@@ -33,14 +42,7 @@ function isPingable(msg) {
 client.on('messageCreate', (msg) => {
 	// if(msg.author.bot) return;
 
-	let isAnnoying = false
-	annoying.some(exp => {
-		if (exp.test(msg.content.toLowerCase())) {
-			isAnnoying = true
-		}
-	})
-
-	if (isAnnoying) {
+	if ( annoying.some(exp => exp.test(msg.content) )) {
 		let count = 0;
 		if (!fs.existsSync('annoying/' + msg.author.id)) {
 			fs.appendFile('annoying/' + msg.author.id, '', (err) => {
@@ -236,7 +238,6 @@ client.on('messageCreate', (msg) => {
 })
 
 client.on('voiceStateUpdate', (oldState, newState) => {
-    return
 	if (newState.channelId !== null && newState.channel.members.size === 1 && oldState.channelId === null) {
 		console.log("ok")
 		client.channels.fetch(nomic).then(channel => {
