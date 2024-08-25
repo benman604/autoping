@@ -3,6 +3,7 @@ const { token, me, sid, justin, nomic, testsite } = require('./config.json');
 const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"] });
 const fs = require('fs');
 const annoying = require('./annoying.js');
+const showCounterProbability = 0.2;
 var rep;
 
 client.once('ready', () => {
@@ -40,7 +41,30 @@ client.on('messageCreate', (msg) => {
 	})
 
 	if (isAnnoying) {
-		msg.reply('shut the FUCK up')
+		let count = 0;
+		if (!fs.existsSync('annoying/' + msg.author.id)) {
+			fs.appendFile('annoying/' + msg.author.id, '', (err) => {
+				if (err) {
+					console.log(err)
+				}
+			})
+		} else {
+			let contents = fs.readFileSync('annoying/' + msg.author.id, 'utf8')
+			count = parseInt(contents)
+		}
+		count++
+
+		if (Math.random() < showCounterProbability) {
+			let nickname = msg.member.displayName
+			if (nickname == null) {
+				nickname = msg.author.username
+			}
+			msg.reply(`${msg.member.displayName} please shut the fuck up i've told you ${count} times`)
+		} else {
+			msg.reply('shut the FUCK up')
+		}
+
+		fs.writeFileSync('annoying/' + msg.author.id, String(count))
 	}
 
 	if(!msg.content.startsWith(',')) return;
@@ -212,6 +236,7 @@ client.on('messageCreate', (msg) => {
 })
 
 client.on('voiceStateUpdate', (oldState, newState) => {
+    return
 	if (newState.channelId !== null && newState.channel.members.size === 1 && oldState.channelId === null) {
 		console.log("ok")
 		client.channels.fetch(nomic).then(channel => {
