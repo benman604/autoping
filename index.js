@@ -3,7 +3,7 @@ const { token, me, sid, justin, nomic, testsite } = require('./config.json');
 const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"] });
 const fs = require('fs');
 // const annoying = require('./annoying.js');
-const showCounterProbability = 0.2;
+const showCounterProbability = 0.3;
 var rep;
 
 let annoying = []
@@ -12,7 +12,9 @@ fs.readFile('annoying.txt', 'utf8', (err, data) => {
 		console.error(err)
 		return
 	}
-	annoying = data.split('\n').map(exp => new RegExp(exp, 'i')) // case insensitive
+    annoying = data.split('\n')
+	.filter(exp => exp.trim() !== "")
+	.map(exp => new RegExp(exp, 'i')) // case insensitive
 })
 
 client.once('ready', () => {

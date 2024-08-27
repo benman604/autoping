@@ -9,4 +9,4 @@ locked out
 (its|it's|it is) s[o]+.*over
 (its|it's|it is)*.over for
 ^s[o]+\b(?:\s+\w+){1,2}\s+over\b(?:\s+\w+){0,2}$
-joever
+[j]+[o]+[e]+[v]+[e]+[r]+
