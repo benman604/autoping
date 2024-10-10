@@ -17,6 +17,52 @@ fs.readFile('annoying.txt', 'utf8', (err, data) => {
 	.map(exp => new RegExp(exp, 'i')) // case insensitive
 })
 
+let userAnnoying = {}
+let userNoping = {}
+let userOnvc = {}
+
+fs.readdir('annoying/', (err, files) => {
+	if (err) {
+		console.error(err)
+		return
+	}
+	files.forEach(file => {
+		fs.readFile('annoying/' + file, 'utf8', (err, data) => {
+			if (err) {
+				console.error(err)
+				return
+			}
+			userAnnoying[file] = parseInt(data)
+		})
+	})
+})
+
+fs.readdir('noping/', (err, files) => {
+	if (err) {
+		console.error(err)
+		return
+	}
+	files.forEach(file => {
+		userNoping[file] = true
+	})
+})
+
+fs.readdir('onvc/', (err, files) => {
+	if (err) {
+		console.error(err)
+		return
+	}
+	files.forEach(file => {
+		if (userOnvc[file]) {
+			userOnvc[file].onvc = true
+		}
+	})
+})
+
+console.log(userAnnoying)
+console.log(userNoping)
+console.log(userOnvc)
+
 client.once('ready', () => {
 	console.log('Ready!');
 });
@@ -44,7 +90,7 @@ function isPingable(msg) {
 client.on('messageCreate', (msg) => {
 	// if(msg.author.bot) return;
 
-	if ( annoying.some(exp => exp.test(msg.content) )) {
+	if ( annoying.some(exp => exp.test(msg.content)) ) {
 		let count = 0;
 		if (!fs.existsSync('annoying/' + msg.author.id)) {
 			fs.appendFile('annoying/' + msg.author.id, '', (err) => {
